@@ -31,7 +31,7 @@ const NftCard = (props: NftCardProps) => {
     return (
         <div
             className="max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 m-2">
-            <a href={props.token.uri} target={"_blank"}>
+            <a href={props.token.uri} target={"_blank"} rel={"noreferrer"}>
                 <img className="rounded-t-lg" src={image} alt="NFT Image"/>
                 <div className="p-5">
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
