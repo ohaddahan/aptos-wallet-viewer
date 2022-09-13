@@ -4,6 +4,7 @@ import {addressAtom, modalAtom, nftsAtoms} from "../atoms/atoms";
 import {Case, Default, Switch} from "react-if";
 import {useWallet as useAptosWallet} from "@manahippo/aptos-wallet-adapter/dist/WalletProviders/useWallet";
 import {shortAddress} from "../utils/helpers";
+import InputWallet from "./InputWallet";
 
 const AppNavBar = () => {
     const [_modal, setModal] = useRecoilState(modalAtom);
@@ -19,6 +20,9 @@ const AppNavBar = () => {
                 </a>
                 <div className="hidden w-full md:block md:w-auto" id="navbar-default">
                     <ul className="flex flex-col p-4 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 dark:border-gray-700">
+                        <li>
+                            <InputWallet/>
+                        </li>
                         <li>
                             <Switch>
                                 <Case condition={address !== undefined}>

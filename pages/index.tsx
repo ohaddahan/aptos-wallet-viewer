@@ -1,10 +1,9 @@
 import type { NextPage } from "next";
 import { useWallet as useAptosWallet } from "@manahippo/aptos-wallet-adapter";
 import AppNavBar from "../components/AppNavBar";
-import InputWallet from "../components/InputWallet";
 import WalletSelector from "../components/WalletSelector";
 import {useEffect} from "react";
-import {useRecoilState, useRecoilValue} from "recoil";
+import {useRecoilValue} from "recoil";
 import {nftsAtoms} from "../atoms/atoms";
 import NftCard from "../components/NftCard";
 
@@ -22,11 +21,12 @@ const Home: NextPage = () => {
             <AppNavBar/>
             <div className="container mx-auto">
                 <WalletSelector/>
-                <InputWallet/>
-                {nfts.map((nft, index) => <div key={index}>
-                        <NftCard token={nft}/>
-                    </div>
-                )}
+                <div className={"flex"}>
+                    {nfts.map((nft, index) => <div key={index} className={"sm:w-1/2 md:w-1/3 lg:w-1/4"}>
+                            <NftCard token={nft}/>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

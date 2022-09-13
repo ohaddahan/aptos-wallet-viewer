@@ -37,36 +37,41 @@ async function getCollectionMints(client: AptosClient, address: MaybeHexString):
 //         Events.deposit_events)
 // }
 
-export async function fetchWalletNfts(addressString: MaybeHexString): Promise<TokenData[]>{
-    const address = addressString as MaybeHexString;
+export async function fetchWalletNfts(address: MaybeHexString): Promise<TokenData[]>{
     const output: TokenData[] = [];
-    const client = new AptosClient(NODE_URL);
-    const tokenClient = new TokenClient(client);
+    try {
 
-    const resources = await client.getAccountResources(address);
-    const resourcesByType: { [key: MoveStructTag]: MoveStructValue[] } = {};
 
-    for (const resource of resources) {
-        if (!(resource.type in resourcesByType)) {
-            resourcesByType[resource.type] = [];
+        const client = new AptosClient(NODE_URL);
+        const tokenClient = new TokenClient(client);
+
+        const resources = await client.getAccountResources(address);
+        const resourcesByType: { [key: MoveStructTag]: MoveStructValue[] } = {};
+
+        for (const resource of resources) {
+            if (!(resource.type in resourcesByType)) {
+                resourcesByType[resource.type] = [];
+            }
+            resourcesByType[resource.type].push(resource.data);
         }
-        resourcesByType[resource.type].push(resource.data);
-    }
 
-    for (const collection of resourcesByType[Resources.Collections]) {
-        const createEvents = await getCreateCollectionData(client, address);
-        for (const event of createEvents) {
-            const collectionData = await tokenClient.getCollectionData(address, event.data.collection_name);
-            const mintEvents = await getCollectionMints(client, address);
-            for (const mintEvent of mintEvents) {
-                try {
-                    const tokenData = await tokenClient.getTokenData(address, collectionData.name, mintEvent.data.id.name);
-                    output.push(tokenData);
-                } catch (e: any) {
-                    console.log(`e: ${e}`);
+        for (const collection of resourcesByType[Resources.Collections]) {
+            const createEvents = await getCreateCollectionData(client, address);
+            for (const event of createEvents) {
+                const collectionData = await tokenClient.getCollectionData(address, event.data.collection_name);
+                const mintEvents = await getCollectionMints(client, address);
+                for (const mintEvent of mintEvents) {
+                    try {
+                        const tokenData = await tokenClient.getTokenData(address, collectionData.name, mintEvent.data.id.name);
+                        output.push(tokenData);
+                    } catch (e: any) {
+                        console.log(`e: ${e}`);
+                    }
                 }
             }
         }
+    } catch (e: any) {
+        console.log(`e: ${e}`);
     }
     return output;
 }
